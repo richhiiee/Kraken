@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Kraken Elite Integration</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    #container {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      color: #0f0;
+    }
+    #cpu, #pump {
+      font-size: 48px;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div id="cpu">CPU Temp Loading</div>
+    <div id="pump">Pump Speed Loading</div>
+  </div>
+  <script>
+    window.nzxt.v1.onMonitoringDataUpdate(function(data) {
+      document.getElementById('cpu').textContent = 'CPU ' + Math.round(data.cpuTemp) + ' °C';
+      document.getElementById('pump').textContent = 'Pump ' + Math.round(data.pumpSpeed) + ' RPM';
+    });
+  </script>
+</body>
+</html>
