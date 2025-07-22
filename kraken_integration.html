@@ -30,10 +30,23 @@
     <div id="pump">Pump Speed Loading</div>
   </div>
   <script>
-    window.nzxt.v1.onMonitoringDataUpdate(function(data) {
-      document.getElementById('cpu').textContent = 'CPU ' + Math.round(data.cpuTemp) + ' °C';
-      document.getElementById('pump').textContent = 'Pump ' + Math.round(data.pumpSpeed) + ' RPM';
-    });
+    document.addEventListener('DOMContentLoaded', function() {
+      function subscribe() {
+        if (window.nzxt && window.nzxt.v1 && window.nzxt.v1.onMonitoringDataUpdate) {
+          console.log('Subscribing to monitoring data update')
+          window.nzxt.v1.onMonitoringDataUpdate(function(data) {
+            console.log('Monitoring data received', data)
+            var cpuVal = data.cpuTemp !== undefined ? data.cpuTemp : data.cpuTemperature
+            document.getElementById('cpu').textContent = 'CPU ' + Math.round(cpuVal) + ' °C'
+            document.getElementById('pump').textContent = 'Pump ' + Math.round(data.pumpSpeed) + ' RPM'
+          })
+        } else {
+          console.log('nzxt API not ready, retrying in 500ms')
+          setTimeout(subscribe, 500)
+        }
+      }
+      subscribe()
+    })
   </script>
 </body>
 </html>
